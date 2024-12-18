@@ -1,0 +1,93 @@
+---
+title: "Tourism Dataset Analysis"
+output: html_document
+date: "2024-12-17"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+```{r}
+Tourism <- read.csv("tourism_resource_dataset.csv")
+head(Tourism)
+```
+```{r}
+summary(Tourism)
+```
+
+Further data visualization using boxplots
+
+```{r}
+boxplot(visitor_count~location_id, data = Tourism, 
+                         xlab = "Visitor Count",
+                         ylab = "Location ID",
+                         horizontal = TRUE,
+                         pch = 16,
+                         main = "Visitor Count for each Location")
+                          
+boxplot(visitor_satisfaction~location_id, data = Tourism, 
+        xlab = "Visitor Satisfaction",
+        ylab = "Location ID",
+        horizontal = TRUE,
+        pch = 16,
+        main = "Visitor Satisfaction for each Location")
+
+boxplot(resource_usage_rate~location_id, data = Tourism, 
+        xlab = "Resource Usage Rate",
+        ylab = "Location ID",
+        horizontal = TRUE,
+        pch = 16,
+        main = "Resource Usage Rate for each Location")
+```
+There is no apparent relation between resource usage rate and visitor count/satisfaction. 
+```{r}
+cor(Tourism$resource_usage_rate, Tourism$visitor_satisfaction)
+```
+A correlation of -0.05401795 shows that there is almost no correlation between resource usage rate and visitor satisfaction. The negative correlation is also surprising but it does not hold much significance given the value.
+
+
+Data visualization between the different season
+
+```{r}
+boxplot(visitor_count~season, data = Tourism, 
+                         xlab = "Visitor Count",
+                         ylab = "Season",
+                         horizontal = TRUE,
+                         pch = 16,
+                         main = "Visitor Count for each Season",
+                         col = c('orange', 'pink', 'lightgreen', 'lightblue'))
+boxplot(visitor_satisfaction~season, data = Tourism, 
+                         xlab = "Visitor Count",
+                         ylab = "Season",
+                         horizontal = TRUE,
+                         pch = 16,
+                         main = "Visitor Satisfaction for each Season",
+                         col = c('orange', 'pink', 'lightgreen', 'lightblue'))
+```
+Variation among seasons also show no specific trend.
+
+
+To explore the relation between visitor count and satisfaction, we can run a significance test for a difference in means?
+```{r}
+t.test(Tourism$visitor_count, Tourism$visitor_satisfaction, conf.level = .95)
+```
